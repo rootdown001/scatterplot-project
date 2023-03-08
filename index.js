@@ -5,11 +5,14 @@
 // User Story #3: I can see a y-axis that has a corresponding id="y-axis".
 
 // User Story #4: I can see dots, that each have a class of dot, which represent the data being plotted.
+        // done - PASS
 
 // User Story #5: Each dot should have the properties data-xvalue and data-yvalue containing their corresponding x and y values.
+        // done - PASS 
 
 // User Story #6: The data-xvalue and data-yvalue of each dot should be within the range of the actual data and in the correct data format. For data-xvalue, integers (full years) or Date objects are acceptable for test evaluation. For data-yvalue (minutes), use Date objects.
-
+        // done - PASS
+                                                                                                                                                                                        
 // User Story #7: The data-xvalue and its corresponding dot should align with the corresponding point/value on the x-axis.
 
 // User Story #8: The data-yvalue and its corresponding dot should align with the corresponding point/value on the y-axis.
@@ -37,6 +40,10 @@ const paddingHor = 30;
 const paddingVert = 30;
 // define radius of circles
 const circleRad = 4;
+
+// define colors for circle fill
+const doping = "aqua";
+const noDoping = "red";
 
 // enter d3.json api
 d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json")
@@ -69,8 +76,26 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     
     // find min & max x axis (years)
     const domainYear = d3.extent(justYear)
-    //console.log("🚀 ~ file: index.js:67 ~ domainYear:", domainYear)
+    console.log("🚀 ~ file: index.js:79 ~ domainYear:", domainYear)
     
+    // create new Date obj for domainYear arr
+    const domainFirst = new Date(domainYear[0])
+    const domainLast = new Date(domainYear[1])
+    
+    // subtract 4 yrs 1st date obj
+    domainFirst.setFullYear(domainFirst.getFullYear() - 4)
+    console.log("🚀 ~ file: index.js:85 ~ domainFirst:", domainFirst)
+    
+    // add 4 yrs to 2st date obj
+    domainLast.setFullYear(domainLast.getFullYear() + 4)
+    console.log("🚀 ~ file: index.js:91 ~ domainYear:", domainYear)
+
+    //domainYear[0] = domainFirst;
+    //domainYear[1] = domainLast;
+    console.log("🚀 ~ file: index.js:95 ~ domainYear:", domainYear)
+
+    
+
     const xScale = d3.scaleTime()
                     .domain(domainYear)
                     .range([paddingHor, svg_w - paddingHor])
@@ -81,6 +106,12 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
                     .range([svg_h - paddingVert, paddingVert])
     //console.log("🚀 ~ file: index.js:79 ~ yScale:", yScale)
     
+    // create x axis
+    const xAxis = d3.axisBottom(xScale)
+
+
+
+
     // create svg obj - give dimensions
     const svg = d3.select(".forSvg")
                     .append("svg")
@@ -97,12 +128,25 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .data(dataObj)
         .enter()
         .append("circle")
+        // add cx, cy, r
         .attr("cx", (d, i) => xScale(parseYear(d.Year)))
         .attr("cy", (d, i) => svg_h - paddingVert - yScale(parseMin(d.Time)))
         .attr("r", circleRad)
+        // outline circles
         .attr("stroke", "black")
-        .attr("fill", "aqua")
+        // fill with diff colors based on doping or not
+        .attr("fill", (d) => d.Doping === "" ? noDoping : doping)
+        // each circle gets .dot class
+        .attr("class", "dot")
+        // add required attributes
+        .attr("data-xvalue", (d) => parseYear(d.Year))
+        .attr("data-yvalue", (d) => parseMin(d.Time))
 
+    // add x axis
+    svg.append("g")
+        .attr("id", "x-axis")
+        .attr("transform", "translate(0, " + (svg_h - paddingVert) + ")")
+        .call(xAxis)
 
 
     // exit d3.json().then     
