@@ -1,9 +1,9 @@
 // User Story #1: I can see a title element that has a corresponding id="title".
 
 // User Story #2: I can see an x-axis that has a corresponding id="x-axis".
-
+        // done - PASS
 // User Story #3: I can see a y-axis that has a corresponding id="y-axis".
-
+        // done - PASS
 // User Story #4: I can see dots, that each have a class of dot, which represent the data being plotted.
         // done - PASS
 
@@ -14,16 +14,21 @@
         // done - PASS
                                                                                                                                                                                         
 // User Story #7: The data-xvalue and its corresponding dot should align with the corresponding point/value on the x-axis.
+        // done - PASS
 
 // User Story #8: The data-yvalue and its corresponding dot should align with the corresponding point/value on the y-axis.
 
 // User Story #9: I can see multiple tick labels on the y-axis with %M:%S time format.
+        // done - PASS
 
 // User Story #10: I can see multiple tick labels on the x-axis that show the year.
+        // done - PASS
 
 // User Story #11: I can see that the range of the x-axis labels are within the range of the actual x-axis data.
+        // done - PASS
 
 // User Story #12: I can see that the range of the y-axis labels are within the range of the actual y-axis data.
+        // done - PASS
 
 // User Story #13: I can see a legend containing descriptive text that has id="legend".
 
@@ -76,29 +81,30 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     
     // find min & max x axis (years)
     const domainYear = d3.extent(justYear)
-    console.log("🚀 ~ file: index.js:79 ~ domainYear:", domainYear)
-    
-    // create new Date obj for domainYear arr
-    const domainFirst = new Date(domainYear[0])
-    const domainLast = new Date(domainYear[1])
-    
-    // subtract 4 yrs 1st date obj
-    domainFirst.setFullYear(domainFirst.getFullYear() - 4)
-    console.log("🚀 ~ file: index.js:85 ~ domainFirst:", domainFirst)
-    
-    // add 4 yrs to 2st date obj
-    domainLast.setFullYear(domainLast.getFullYear() + 4)
-    console.log("🚀 ~ file: index.js:91 ~ domainYear:", domainYear)
+    // console.log("🚀 ~ file: index.js:79 ~ domainYear:", domainYear)
 
-    //domainYear[0] = domainFirst;
-    //domainYear[1] = domainLast;
-    console.log("🚀 ~ file: index.js:95 ~ domainYear:", domainYear)
+    // TODO: can erase this bc doesn't pass test
+    // // create new Date obj for domainYear arr
+    // const domainFirst = new Date(domainYear[0])
+    // const domainLast = new Date(domainYear[1])
+    
+    // // subtract 4 yrs 1st date obj
+    // domainFirst.setFullYear(domainFirst.getFullYear() - 4)
+    // console.log("🚀 ~ file: index.js:85 ~ domainFirst:", domainFirst)
+    
+    // // add 4 yrs to 2st date obj
+    // domainLast.setFullYear(domainLast.getFullYear() + 4)
+    // console.log("🚀 ~ file: index.js:91 ~ domainYear:", domainYear)
+
+    // //domainYear[0] = domainFirst;
+    // //domainYear[1] = domainLast;
+    // console.log("🚀 ~ file: index.js:95 ~ domainYear:", domainYear)
 
     
 
     const xScale = d3.scaleTime()
                     .domain(domainYear)
-                    .range([paddingHor, svg_w - paddingHor])
+                    .range([paddingHor + 14, svg_w - paddingHor])
     //console.log("🚀 ~ file: index.js:74 ~ xScale:", xScale)
     
     const yScale = d3.scaleTime()
@@ -109,6 +115,9 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     // create x axis
     const xAxis = d3.axisBottom(xScale)
 
+    const timeFormat = d3.timeFormat("%M:%S")
+    // create y axis
+    const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat)
 
 
 
@@ -141,12 +150,37 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         // add required attributes
         .attr("data-xvalue", (d) => parseYear(d.Year))
         .attr("data-yvalue", (d) => parseMin(d.Time))
+        .on("mouseover", function(event, d) {
+            tooltip.html(d.Time + "<br>" + parseYear(d.Year))
+                .style("display", "block")
+                .attr("data-year", (d) => parseYear(d.Year))
+        // TODO: fix tooltip -> maybe send parseYear(d.Year) through Date.getFullYear?
+
+            
+        })
+        // put display back to none on mouseout
+        .on("mouseout", function() {
+            tooltip.style("display", "none")
+        })
+
+
 
     // add x axis
     svg.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, " + (svg_h - paddingVert) + ")")
         .call(xAxis)
+
+
+
+    // TODO: flip x axis    
+    // add y axis
+    svg.append("g")
+        .attr("id", "y-axis")
+        .attr("transform", "translate(" + (paddingHor + 8) + ", 0)")
+        .call(yAxis)
+
+
 
 
     // exit d3.json().then     
