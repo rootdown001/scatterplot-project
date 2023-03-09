@@ -40,9 +40,12 @@
 // define w & h of svg
 const svg_w = 1100;
 const svg_h = 670;
+
 // define padding variable
 const paddingHor = 30;
 const paddingVert = 30;
+const adj = 14;
+
 // define radius of circles
 const circleRad = 4;
 
@@ -101,23 +104,30 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     // console.log("🚀 ~ file: index.js:95 ~ domainYear:", domainYear)
 
     
-
+    // create xScale
     const xScale = d3.scaleTime()
                     .domain(domainYear)
                     .range([paddingHor + 14, svg_w - paddingHor])
     //console.log("🚀 ~ file: index.js:74 ~ xScale:", xScale)
     
+    // create yScale
     const yScale = d3.scaleTime()
                     .domain(domainMin)
                     .range([svg_h - paddingVert, paddingVert])
     //console.log("🚀 ~ file: index.js:79 ~ yScale:", yScale)
     
+    // create yScaleA
+    const yScaleA = d3.scaleTime()
+                    .domain(domainMin)
+                    .range([paddingVert, svg_h - paddingVert])
+
+
     // create x axis
     const xAxis = d3.axisBottom(xScale)
 
     const timeFormat = d3.timeFormat("%M:%S")
     // create y axis
-    const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat)
+    const yAxis = d3.axisLeft(yScaleA).tickFormat(timeFormat)
 
 
 
@@ -139,7 +149,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .append("circle")
         // add cx, cy, r
         .attr("cx", (d, i) => xScale(parseYear(d.Year)))
-        .attr("cy", (d, i) => svg_h - paddingVert - yScale(parseMin(d.Time)))
+        .attr("cy", (d, i) => svg_h - yScale(parseMin(d.Time)))
         .attr("r", circleRad)
         // outline circles
         .attr("stroke", "black")
@@ -154,7 +164,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
             tooltip.html(d.Time + "<br>" + parseYear(d.Year))
                 .style("display", "block")
                 .attr("data-year", (d) => parseYear(d.Year))
-        // TODO: fix tooltip -> maybe send parseYear(d.Year) through Date.getFullYear?
+        // TODO: fix tooltip -> looks like need date oject - in example all dates in array changed to date object
 
             
         })
@@ -163,24 +173,54 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
             tooltip.style("display", "none")
         })
 
-
+ 
 
     // add x axis
     svg.append("g")
         .attr("id", "x-axis")
-        .attr("transform", "translate(0, " + (svg_h - paddingVert) + ")")
+        .attr("transform", "translate(0, " + (svg_h-(paddingVert)) + ")")
         .call(xAxis)
 
 
 
-    // TODO: flip x axis    
+ 
     // add y axis
     svg.append("g")
         .attr("id", "y-axis")
-        .attr("transform", "translate(" + (paddingHor + 8) + ", 0)")
+        .attr("transform", "translate(" + (paddingHor + 8) + ", " + (0) + ")")
         .call(yAxis)
 
+    // create title
+    svg.append('text')
+        .attr("x", svg_w/2)
+        .attr("y", 20)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "1.7rem")
+        .attr("id", "title")
+        .text('Doping in Professional Bicycle Racing');
 
+    svg.append("text")
+        .attr("x", -20)
+        .attr("y", 100)
+        .text("Time in Minutes")
+
+
+    // legend (i linked to additional script in HTML head for this. it doesn't come with d3)
+    // create color scale for legend
+    const colorScale = d3.scaleOrdinal()
+        .domain(["No doping allegations", "Riders with doping allegations"])
+        .range([noDoping, doping]);
+
+    // add legend
+    const legend = d3.legendColor()
+        //.title("Legend")
+        .scale(colorScale);
+
+    // add g element and call legend obj
+    svg.append("g")
+        .attr("id", "legend")
+        .attr("transform", "translate(" + (svg_w - 300) + "," + (svg_h - 500) + ")")
+        .call(legend);
 
 
     // exit d3.json().then     

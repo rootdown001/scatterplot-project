@@ -28,6 +28,7 @@ svg {
     margin-bottom: 1%;
     padding-left: 30px;
     padding-right: 30px;
+    padding-top: 60px;
     background-color: wheat;
 }
 
@@ -38,3 +39,4 @@ svg {
     display: none;
     border: 1px solid gray;
 }
+
