@@ -53,11 +53,11 @@ const paddingVert = 30;
 const adj = 22;
 
 // define radius of circles
-const circleRad = 4;
+const circleRad = 5;
 
-// define colors for circle fill
-const doping = "aqua";
-const noDoping = "red";
+// define colors for circle fill - colors picked using "i want hue"
+const doping = "#963B00";
+const noDoping = "#6874FF";
 
 // enter d3.json api
 d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json")
