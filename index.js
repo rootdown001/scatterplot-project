@@ -1,7 +1,9 @@
 // User Story #1: I can see a title element that has a corresponding id="title".
+        // done - PASS
 
 // User Story #2: I can see an x-axis that has a corresponding id="x-axis".
         // done - PASS
+
 // User Story #3: I can see a y-axis that has a corresponding id="y-axis".
         // done - PASS
 // User Story #4: I can see dots, that each have a class of dot, which represent the data being plotted.
@@ -17,6 +19,7 @@
         // done - PASS
 
 // User Story #8: The data-yvalue and its corresponding dot should align with the corresponding point/value on the y-axis.
+        // done - PASS
 
 // User Story #9: I can see multiple tick labels on the y-axis with %M:%S time format.
         // done - PASS
@@ -31,12 +34,15 @@
         // done - PASS
 
 // User Story #13: I can see a legend containing descriptive text that has id="legend".
+        // done - PASS
 
 // User Story #14: I can mouse over an area and see a tooltip with a corresponding id="tooltip" which displays more information about the area.
-        // gave tooltip id
+        // done - PASS
 
 // User Story #15: My tooltip should have a data-year property that corresponds to the data-xvalue of the active area.
+        // done - PASS
 
+// -CREATE VARIABLES-
 // define w & h of svg
 const svg_w = 1100;
 const svg_h = 670;
@@ -44,7 +50,7 @@ const svg_h = 670;
 // define padding variable
 const paddingHor = 30;
 const paddingVert = 30;
-const adj = 14;
+const adj = 22;
 
 // define radius of circles
 const circleRad = 4;
@@ -56,7 +62,6 @@ const noDoping = "red";
 // enter d3.json api
 d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json")
     .then(dataObj => {
-    console.log("🚀 ~ file: index.js:39 ~ dataObj:", dataObj)
 
     //create timeParse obj for min
     const parseMin = d3.timeParse("%M:%S")
@@ -69,58 +74,33 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     for (let obj of dataObj) {
         justMin.push(parseMin(obj.Time));
     }    
-    // console.log(justMin)
 
     // make array of years (x axis) for extent
     const justYear = [];
     for (let obj of dataObj) {
         justYear.push(parseYear(obj.Year))
     }
-    //console.log(justYear)
 
     // find min & max of Y axis (minutes)
     const domainMin = d3.extent(justMin);
-    // console.log("🚀 ~ file: index.js:62 ~ domainMin:", domainMin)
     
     // find min & max x axis (years)
     const domainYear = d3.extent(justYear)
-    // console.log("🚀 ~ file: index.js:79 ~ domainYear:", domainYear)
 
-    // TODO: can erase this bc doesn't pass test
-    // // create new Date obj for domainYear arr
-    // const domainFirst = new Date(domainYear[0])
-    // const domainLast = new Date(domainYear[1])
-    
-    // // subtract 4 yrs 1st date obj
-    // domainFirst.setFullYear(domainFirst.getFullYear() - 4)
-    // console.log("🚀 ~ file: index.js:85 ~ domainFirst:", domainFirst)
-    
-    // // add 4 yrs to 2st date obj
-    // domainLast.setFullYear(domainLast.getFullYear() + 4)
-    // console.log("🚀 ~ file: index.js:91 ~ domainYear:", domainYear)
-
-    // //domainYear[0] = domainFirst;
-    // //domainYear[1] = domainLast;
-    // console.log("🚀 ~ file: index.js:95 ~ domainYear:", domainYear)
-
-    
     // create xScale
     const xScale = d3.scaleTime()
                     .domain(domainYear)
-                    .range([paddingHor + 14, svg_w - paddingHor])
-    //console.log("🚀 ~ file: index.js:74 ~ xScale:", xScale)
+                    .range([paddingHor + 14 + adj, svg_w - paddingHor])
     
     // create yScale
     const yScale = d3.scaleTime()
                     .domain(domainMin)
                     .range([svg_h - paddingVert, paddingVert])
-    //console.log("🚀 ~ file: index.js:79 ~ yScale:", yScale)
     
-    // create yScaleA
+    // create yScaleA (IN ORDER TO FLIP Y AXIS)
     const yScaleA = d3.scaleTime()
                     .domain(domainMin)
                     .range([paddingVert, svg_h - paddingVert])
-
 
     // create x axis
     const xAxis = d3.axisBottom(xScale)
@@ -128,8 +108,6 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     const timeFormat = d3.timeFormat("%M:%S")
     // create y axis
     const yAxis = d3.axisLeft(yScaleA).tickFormat(timeFormat)
-
-
 
     // create svg obj - give dimensions
     const svg = d3.select(".forSvg")
@@ -142,6 +120,8 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
                     .append("div")
                     .attr("id", "tooltip")
 
+
+    // - RUN THROUGH DATA AND CREATE PLOT-
     // add circles with x, y values
     svg.selectAll("circle")
         .data(dataObj)
@@ -163,10 +143,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .on("mouseover", function(event, d) {
             tooltip.html(d.Time + "<br>" + parseYear(d.Year))
                 .style("display", "block")
-                .attr("data-year", (d) => parseYear(d.Year))
-        // TODO: fix tooltip -> looks like need date oject - in example all dates in array changed to date object
-
-            
+                .attr("data-year", parseYear(d.Year))            
         })
         // put display back to none on mouseout
         .on("mouseout", function() {
@@ -174,22 +151,21 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         })
 
  
-
+    // -AXIS-
     // add x axis
     svg.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, " + (svg_h-(paddingVert)) + ")")
         .call(xAxis)
 
-
-
- 
     // add y axis
     svg.append("g")
         .attr("id", "y-axis")
-        .attr("transform", "translate(" + (paddingHor + 8) + ", " + (0) + ")")
+        .attr("transform", "translate(" + (paddingHor + 8 + adj) + ", " + (0) + ")")
         .call(yAxis)
 
+
+    // - TITLES-
     // create title
     svg.append('text')
         .attr("x", svg_w/2)
@@ -199,12 +175,16 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("id", "title")
         .text('Doping in Professional Bicycle Racing');
 
+    // title fo y axis
     svg.append("text")
-        .attr("x", -20)
-        .attr("y", 100)
+        .attr("transform", "rotate(-90)")
+        .attr("x", -250)
+        .attr("y", 14)
+        .attr("font-size", "1.1rem")
         .text("Time in Minutes")
 
 
+    // -LEGEND-
     // legend (i linked to additional script in HTML head for this. it doesn't come with d3)
     // create color scale for legend
     const colorScale = d3.scaleOrdinal()
@@ -221,9 +201,12 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("id", "legend")
         .attr("transform", "translate(" + (svg_w - 300) + "," + (svg_h - 500) + ")")
         .call(legend);
+    
 
-
+    // -EXIT-
     // exit d3.json().then     
     }) 
+
+    // -CATCH ERRORS-
     // catch error & send to console
     .catch(error => console.log(error));
