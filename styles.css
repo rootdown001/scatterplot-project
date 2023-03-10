@@ -36,7 +36,7 @@ svg {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: hsl(24, 100%, 88%);
+    
     font-size: 1.2em;
     display: none;
     border: 1px solid white;

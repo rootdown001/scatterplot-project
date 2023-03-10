@@ -141,10 +141,13 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("data-xvalue", (d) => parseYear(d.Year))
         .attr("data-yvalue", (d) => parseMin(d.Time))
         .on("mouseenter", function(e, d) {
+            let bg = "";
+            d.Doping === "" ? bg = "hsl(235, 100%, 90%)" : bg = "hsl(24, 100%, 88%)"
             tooltip.html(d.Name + " - " + d.Nationality + "<br>" + d.Time + " minutes" + "<br>" + d.Year)
                 .style("display", "block")
                 .style("left", (e.pageX + 14) + "px")
                 .style("top", e.pageY + "px")
+                .style("background-color", bg)
                 .attr("data-year", parseYear(d.Year))
                 
 
