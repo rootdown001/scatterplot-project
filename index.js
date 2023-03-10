@@ -53,7 +53,7 @@ const paddingVert = 30;
 const adj = 22;
 
 // define radius of circles
-const circleRad = 5;
+const circleRad = 6;
 
 // define colors for circle fill - colors picked using "i want hue"
 const doping = "#963B00";
@@ -140,10 +140,14 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         // add required attributes
         .attr("data-xvalue", (d) => parseYear(d.Year))
         .attr("data-yvalue", (d) => parseMin(d.Time))
-        .on("mouseover", function(event, d) {
-            tooltip.html(d.Time + "<br>" + parseYear(d.Year))
+        .on("mouseenter", function(e, d) {
+            tooltip.html(d.Name + " - " + d.Nationality + "<br>" + d.Time + " minutes" + "<br>" + d.Year)
                 .style("display", "block")
-                .attr("data-year", parseYear(d.Year))            
+                .style("left", (e.pageX + 14) + "px")
+                .style("top", e.pageY + "px")
+                .attr("data-year", parseYear(d.Year))
+                
+
         })
         // put display back to none on mouseout
         .on("mouseout", function() {

@@ -34,9 +34,17 @@ svg {
 
 #tooltip {
     position: absolute;
-    background-color: white;
-    font-size: 1.4em;
+    left: 0;
+    top: 0;
+    background-color: hsl(24, 100%, 88%);
+    font-size: 1.2em;
     display: none;
-    border: 1px solid gray;
+    border: 1px solid white;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    
+    border-radius: 5px;
 }
 
