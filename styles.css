@@ -48,3 +48,10 @@ svg {
     border-radius: 5px;
 }
 
+#x-axis {
+    font-size: 0.8em;
+}
+
+#y-axis {
+    font-size: 0.8em;
+}

@@ -50,7 +50,7 @@ const svg_h = 670;
 // define padding variable
 const paddingHor = 30;
 const paddingVert = 30;
-const adj = 22;
+const adj = 34;
 
 // define radius of circles
 const circleRad = 6;
@@ -182,7 +182,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     // title fo y axis
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("x", -250)
+        .attr("x", -390)
         .attr("y", 14)
         .attr("font-size", "1.1rem")
         .text("Time in Minutes")
