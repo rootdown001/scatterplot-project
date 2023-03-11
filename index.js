@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // User Story #1: I can see a title element that has a corresponding id="title".
         // done - PASS
 
@@ -217,3 +218,5 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     // -CATCH ERRORS-
     // catch error & send to console
     .catch(error => console.log(error));
+=======
+>>>>>>> 99e1e044d8e2f8f6d208bf5ebd497d078680a760
